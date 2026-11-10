@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Registration Form</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e8e9ff, #f4eaff);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px 15px;
+}
+
+.container {
+    background: white;
+    width: 100%;
+    max-width: 450px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.10);
+}
+
+.tag {
+    text-align: center;
+    color: #62518e;
+    background: #f0eaff;
+    padding: 7px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    width: fit-content;
+    margin: auto;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 27px;
+    color: #20202b;
+}
+
+.subtitle {
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+    margin: 12px 0 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 9px;
+    color: #333;
+}
+
+input, select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    background: white;
+}
+
+input:focus, select:focus {
+    border-color: #8c75d8;
+    box-shadow: 0 0 5px rgba(140,117,216,0.2);
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background: #7155b8;
+    color: white;
+    border: none;
+    border-radius: 9px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #59419a;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#status {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="tag">STUDENT REGISTRATION</div>
+
+    <h1>Enrollment Form</h1>
+
+    <p class="subtitle">
+        Fill in your details to register for our learning program.
+    </p>
+
+    <form id="enrollmentForm">
+
+        <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="name"
+            placeholder="Enter your full name" required>
+        </div>
+
+        <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" id="email"
+            placeholder="you@example.com" required>
+        </div>
+
+        <div class="form-group">
+            <label>Phone Number *</label>
+            <input type="tel" id="phone"
+            placeholder="10-digit mobile number"
+            pattern="[0-9]{10}" maxlength="10" required>
+        </div>
+
+        <div class="form-group">
+            <label>Select Course *</label>
+            <select id="course" required>
+                <option value="">Choose your course</option>
+                <option value="Web Development">Web Development</option>
+                <option value="Python Programming">Python Programming</option>
+                <option value="Java Programming">Java Programming</option>
+                <option value="Graphic Designing">Graphic Designing</option>
+                <option value="Digital Marketing">Digital Marketing</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Education *</label>
+            <input type="text" id="education"
+            placeholder="Enter your qualification" required>
+        </div>
+
+        <button type="submit" id="submitBtn">
+            Submit Enrollment
+        </button>
+
+        <p id="status"></p>
+
+    </form>
+</div>
+
+<script>
+const form = document.getElementById("enrollmentForm");
+const button = document.getElementById("submitBtn");
+const status = document.getElementById("status");
+
+form.addEventListener("submit", async function(e) {
+
+    e.preventDefault();
+
+    const student = {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        course: document.getElementById("course").value,
+        education: document.getElementById("education").value.trim()
+    };
+
+    button.disabled = true;
+    button.textContent = "Submitting...";
+
+    try {
+
+        // Add your Google Apps Script URL here
+        const scriptURL = "YOUR_GOOGLE_APPS_SCRIPT_URL";
+
+        const response = await fetch(scriptURL, {
+            method: "POST",
+            body: JSON.stringify(student)
+        });
+
+        if (!response.ok) {
+            throw new Error("Submission failed");
+        }
+
+        const result = await response.json();
+
+        if (result.success === false) {
+            throw new Error("Could not submit your request");
+        }
+
+        status.style.color = "green";
+        status.textContent =
+        "Request sent! Please check the Enrollments tab in Google Sheets to confirm your registration.";
+
+        form.reset();
+
+    } catch (error) {
+
+        status.style.color = "red";
+        status.textContent =
+        "Could not send the request. Check your internet connection and Apps Script deployment.";
+
+        console.error("Submission error:", error);
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "Submit Enrollment";
+
+    }
+
+});
+</script>
+
+</body>
+</html>
