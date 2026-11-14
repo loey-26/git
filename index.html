@@ -200,19 +200,26 @@ form.addEventListener("submit", async function(e) {
         const scriptURL = "https://script.google.com/macros/s/AKfycbzhBSZbodAY1r7480XCJikZnFemn_YzeswY0pRb-4rpUPyexCts9VJcS0G9Rj3HJVhO/exec";
 
         const response = await fetch(scriptURL, {
-            method: "POST",
-            body: JSON.stringify(student)
-        });
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify(student)
+});
+        
+           
+  
 
-        if (!response.ok) {
-            throw new Error("Submission failed");
-        }
+       
+           
+        
 
-        const result = await response.json();
+       
 
-        if (result.success === false) {
-            throw new Error("Could not submit your request");
-        }
+        
+            
+        
 
         status.style.color = "green";
         status.textContent =
